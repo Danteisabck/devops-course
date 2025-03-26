@@ -21,7 +21,6 @@ Vagrant.configure("2") do |config|
     private.vm.provision "shell", path: "provision_private.sh"
   end
 
-  # VM3 (загальнодоступна мережа зі статичним IP через міст)
   config.vm.define "public_static_vm" do |public_static|
     public_static.vm.box = "bento/ubuntu-24.04"
     public_static.vm.network "forwarded_port", guest: 80, host: 8090, auto_correct: true
