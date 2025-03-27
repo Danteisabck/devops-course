@@ -5,7 +5,7 @@ Vagrant.configure("2") do |config|
   (1..4).each do |i|
     config.vm.define "webserver#{i}" do |web|
       web.vm.box = "bento/ubuntu-24.04"
-      web.vm.network "forwarded_port", guest: 80, host: (8080 + i - 1), auto_correct: true
+      web.vm.network "public_network", type: "dhcp", bridge: "en0: Wi-Fi"
       web.vm.synced_folder "./shared_folder_web", "/vagrant_data"
       web.vm.provision "shell", inline: <<-SHELL
         sudo apt update
@@ -23,7 +23,7 @@ Vagrant.configure("2") do |config|
 
   config.vm.define "public_static_vm" do |public_static|
     public_static.vm.box = "bento/ubuntu-24.04"
-    public_static.vm.network "forwarded_port", guest: 80, host: 8090, auto_correct: true
+    public_static.vm.network "public_network", ip: "192.168.1.150", bridge: "en0: Wi-Fi"
     public_static.vm.synced_folder "./shared_folder_public_static", "/vagrant_data"
     public_static.vm.provision "shell", inline: <<-SHELL
       sudo apt update
