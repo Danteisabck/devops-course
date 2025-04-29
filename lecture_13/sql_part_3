@@ -1,0 +1,37 @@
+UPDATE Children
+SET first_name = 'Child',
+    last_name = 'Anonymous';
+
+WITH numbered_parents AS (
+  SELECT parent_id, ROW_NUMBER() OVER (ORDER BY parent_id) AS rn
+  FROM Parents
+)
+UPDATE Parents p
+SET first_name = 'Parent' || np.rn,
+    last_name = 'Anon' || np.rn
+FROM numbered_parents np
+WHERE p.parent_id = np.parent_id;
+
+WITH numbered_inst AS (
+  SELECT institution_id, ROW_NUMBER() OVER (ORDER BY institution_id) AS rn
+  FROM Institutions
+)
+UPDATE Institutions i
+SET institution_name = 'Institution' || ni.rn
+FROM numbered_inst ni
+WHERE i.institution_id = ni.institution_id;
+
+UPDATE Parents
+SET tuition_fee = ROUND(800 + random() * 700, 2);
+
+SELECT
+    c.first_name AS child_first,
+    c.last_name AS child_last,
+    i.institution_name,
+    p.first_name AS parent_first,
+    p.last_name AS parent_last,
+    p.tuition_fee
+FROM
+    Children c
+JOIN Institutions i ON c.institution_id = i.institution_id
+JOIN Parents p ON p.child_id = c.child_id;
