@@ -1,0 +1,55 @@
+// робив використовуючи постгрес
+
+CREATE DATABASE "SchoolDB";
+
+CREATE TYPE institution_type_enum AS ENUM ('School', 'Kindergarten');
+CREATE TYPE direction_enum AS ENUM ('Mathematics', 'Biology and Chemistry', 'Language Studies');
+
+CREATE TABLE Institutions (
+    institution_id SERIAL PRIMARY KEY,
+    institution_name VARCHAR(255) NOT NULL,
+    institution_type institution_type_enum NOT NULL,
+    address VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE Classes (
+    class_id SERIAL PRIMARY KEY,
+    class_name VARCHAR(255) NOT NULL,
+    institution_id INT REFERENCES Institutions(institution_id),
+    direction direction_enum NOT NULL
+);
+
+CREATE TABLE Children (
+    child_id SERIAL PRIMARY KEY,
+    first_name VARCHAR(255) NOT NULL,
+    last_name VARCHAR(255) NOT NULL,
+    birth_date DATE NOT NULL,
+    year_of_entry SMALLINT NOT NULL,
+    age INT NOT NULL,
+    institution_id INT REFERENCES Institutions(institution_id),
+    class_id INT REFERENCES Classes(class_id)
+);
+
+CREATE TABLE Parents (
+    parent_id SERIAL PRIMARY KEY,
+    first_name VARCHAR(255) NOT NULL,
+    last_name VARCHAR(255) NOT NULL,
+    child_id INT REFERENCES Children(child_id),
+    tuition_fee DECIMAL(10,2) NOT NULL
+);
+
+INSERT INTO Institutions (institution_name, institution_type, address)
+VALUES
+('Little Stars Kindergarten', 'Kindergarten', '789 Dream Ave.');
+
+INSERT INTO Classes (class_name, institution_id, direction)
+VALUES
+('Math Wizards', 2, 'Mathematics');
+
+INSERT INTO Children (first_name, last_name, birth_date, year_of_entry, age, institution_id, class_id)
+VALUES
+('Sophia', 'Brown', '2017-03-05', 2023, 7, 1, NULL);
+
+INSERT INTO Parents (first_name, last_name, child_id, tuition_fee)
+VALUES
+('Olivia', 'Brown', 3, 900.00);
