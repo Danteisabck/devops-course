@@ -1,0 +1,67 @@
+1)Створення бази даних і колекцій
+
+use gymDatabase;
+
+db.createCollection("clients");
+db.createCollection("memberships");
+db.createCollection("workouts");
+db.createCollection("trainers");
+
+2) Визначення схеми документів
+  -- clients
+  {
+    "client_id": 1,
+    "name": "Alex",
+    "age": 35,
+    "email": "alex@example.com"
+  }
+
+  -- memberships
+  {
+    "membership_id": 101,
+    "client_id": 1,
+    "start_date": ISODate("2025-01-01"),
+    "end_date": ISODate("2025-03-31"),
+    "type": "basic"
+  }
+  -- workouts
+  {
+    "workout_id": 10,
+    "description": "strength training",
+    "difficulty": "easy"
+  }
+  -- trainers
+  {
+    "trainer_id": 5,
+    "name": "Bob",
+    "specialization": "strength training"
+  }
+
+3)
+
+// Clients
+db.clients.insertMany([
+  { client_id: 1, name: "John Doe", age: 35, email: "john@example.com" },
+]);
+
+// Memberships
+db.memberships.insertMany([
+  { membership_id: 1, client_id: 1, start_date: new Date("2025-03-01"), end_date: new Date("2025-08-31"), type: "basic" }
+]);
+
+// Workouts
+db.workouts.insertMany([
+  { workout_id: 1, description: "strength training", difficulty: "medium" },
+  { workout_id: 2, description: "cardio", difficulty: "easy" },
+]);
+
+// Trainers
+db.trainers.insertMany([
+  { trainer_id: 1, name: "Bob", specialization: "strength training" },
+]);
+
+4)
+
+db.clients.find({ age: { $gt: 30 } })
+db.workouts.find({ difficulty: "medium" })
+db.memberships.find({ client_id: 1 })
